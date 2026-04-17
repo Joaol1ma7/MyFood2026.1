@@ -10,6 +10,10 @@ public class Usuario {
     private String endereco;
     private String cpf;
 
+    public Usuario() {
+        this.id = UUID.randomUUID().toString();
+    }
+
     public Usuario(String nome, String email, String senha, String endereco) {
         this(nome, email, senha, endereco, null);
     }

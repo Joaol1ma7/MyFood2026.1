@@ -1,23 +1,28 @@
 package br.ufal.ic.myfood.repositories;
 
 import br.ufal.ic.myfood.models.Empresa;
+import br.ufal.ic.myfood.persistence.IdCounter;
+import br.ufal.ic.myfood.persistence.PersistenceManager;
 import java.util.ArrayList;
 import java.util.List;
 
 public class EmpresaRepositoryImpl implements EmpresaRepository {
+    private static final String ARQUIVO_EMPRESAS = "empresas";
+    private static final String ARQUIVO_ID = "empresas_id";
     private List<Empresa> empresaList;
-    private int proximoId;
+    private IdCounter idCounter;
 
     public EmpresaRepositoryImpl() {
-        this.empresaList = new ArrayList<>();
-        this.proximoId = 1;
+        this.empresaList = PersistenceManager.carregar(ARQUIVO_EMPRESAS);
+        List<IdCounter> idList = PersistenceManager.carregar(ARQUIVO_ID);
+        this.idCounter = idList.isEmpty() ? new IdCounter(1) : idList.get(0);
     }
 
     @Override
     public void adicionar(Empresa empresa) {
-        empresa.setId(proximoId);
+        empresa.setId(idCounter.obterEIncrementar());
         empresaList.add(empresa);
-        proximoId++;
+        salvar();
     }
 
     @Override
@@ -49,7 +54,15 @@ public class EmpresaRepositoryImpl implements EmpresaRepository {
     @Override
     public void limpar() {
         empresaList.clear();
-        proximoId = 1;
+        idCounter = new IdCounter(1);
+        salvar();
+    }
+
+    private void salvar() {
+        PersistenceManager.salvar(empresaList, ARQUIVO_EMPRESAS);
+        List<IdCounter> idList = new ArrayList<>();
+        idList.add(idCounter);
+        PersistenceManager.salvar(idList, ARQUIVO_ID);
     }
 }
 

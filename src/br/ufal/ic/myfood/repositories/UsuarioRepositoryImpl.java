@@ -1,19 +1,22 @@
 package br.ufal.ic.myfood.repositories;
 
 import br.ufal.ic.myfood.models.Usuario;
+import br.ufal.ic.myfood.persistence.PersistenceManager;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UsuarioRepositoryImpl implements UsuarioRepository {
+    private static final String ARQUIVO = "usuarios";
     private List<Usuario> usuarioList;
 
     public UsuarioRepositoryImpl() {
-        this.usuarioList = new ArrayList<>();
+        this.usuarioList = PersistenceManager.carregar(ARQUIVO);
     }
 
     @Override
     public void adicionar(Usuario usuario) {
         usuarioList.add(usuario);
+        salvar();
     }
 
     @Override
@@ -44,6 +47,11 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
     @Override
     public void limpar() {
         usuarioList.clear();
+        salvar();
+    }
+
+    private void salvar() {
+        PersistenceManager.salvar(usuarioList, ARQUIVO);
     }
 }
 

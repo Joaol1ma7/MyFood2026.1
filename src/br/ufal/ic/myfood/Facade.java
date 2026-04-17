@@ -8,6 +8,7 @@ import br.ufal.ic.myfood.models.UsuarioManager;
 import br.ufal.ic.myfood.models.EmpresaManager;
 import br.ufal.ic.myfood.models.ProdutoManager;
 import br.ufal.ic.myfood.models.PedidoManager;
+import br.ufal.ic.myfood.persistence.PersistenceManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,6 +85,7 @@ public class Facade {
         userManager.zerarDados();
         empresaManager.zerarDados();
         pedidoManager.zerarDados();
+        PersistenceManager.limparTodosDados();
     }
 
     public String getAtributoUsuario(String id, String atributo) throws UsuarioNaoExisteException {
@@ -130,7 +132,7 @@ public class Facade {
     }
 
     public String getAtributoEmpresa(int empresa, String atributo)
-            throws EmpresaNaoExisteException, AtributoInvalidoException {
+            throws EmpresaNaoCadastradaException, AtributoInvalidoException {
         return empresaManager.getAtributoEmpresa(empresa, atributo);
     }
 

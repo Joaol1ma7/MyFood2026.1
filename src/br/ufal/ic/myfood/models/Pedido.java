@@ -12,6 +12,10 @@ public class Pedido {
     private String estado;
     private List<Integer> produtosIds;
 
+    public Pedido() {
+        this.produtosIds = new ArrayList<>();
+    }
+
     public Pedido(int numero, String cliente, String nomeCliente, String empresa, String nomeEmpresa) {
         this.numero = numero;
         this.cliente = cliente;
@@ -72,6 +76,10 @@ public class Pedido {
 
     public List<Integer> getProdutosIds() {
         return produtosIds;
+    }
+
+    public void setProdutosIds(List<Integer> produtosIds) {
+        this.produtosIds = produtosIds;
     }
 
     public void adicionarProduto(int produtoId) {

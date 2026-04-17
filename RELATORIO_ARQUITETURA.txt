@@ -1,0 +1,82 @@
+RELATORIO SOBRE A ARQUITETURA DO PROJETO MYFOOD
+
+Este projeto utiliza uma arquitetura em camadas.
+Basicamente, o código está organizado em diferentes niveis de responsabilidade, onde cada camada
+faz sua parte e passa o resultado para a próxima.
+
+ESTRUTURA PRINCIPAL
+
+A aplicação é dividida em 5 camadas principais:
+
+1. Camada de Apresentação
+   Aqui ficam os testes do EasyAccept. Essa camada só faz requisições e recebe respostas.
+   
+
+2. Camada de Facade
+   A classe Facade é o ponto de entrada único da aplicação.
+
+3. Camada de Lógica de Negócio
+   Aqui ficam as classes Manager: UsuarioManager, EmpresaManager, ProdutoManager e PedidoManager.
+   Cada uma delas sabe como fazer as operações da sua área. Por exemplo, o UsuarioManager sabe
+   como criar um usuário, fazer login e buscar informações. 
+
+4. Camada de Acesso a Dados
+   Aqui ficam os Repositories. Eles definem interfaces para trabalhar com dados.
+
+5. Camada de Persistência
+   É onde os dados realmente são salvos e carregados. No caso desse projeto, usa XML.
+
+COMO FUNCIONA NA PRATICA
+
+Quando um teste chama Facade.criarUsuario(), isso é o que acontece:
+
+1. Facade recebe a requisição
+2. Facade chama UsuarioManager.criarUsuario()
+3. UsuarioManager valida os dados através do UsuarioValidator
+4. Se os dados forem válidos, UsuarioManager chama UsuarioRepository.adicionar()
+5. UsuarioRepository salva o usuário em memória e depois pede para PersistenceManager salvar em XML
+6. A resposta volta pelos mesmos passos
+
+PADROES DE DESIGN
+
+O projeto usa alguns padrões conhecidos:
+
+Facade - Oferece uma interface simples para a aplicação inteira
+Repository - Abstrai como os dados são armazenados
+Manager - Concentra toda lógica de uma entidade em um lugar
+Dependency Injection - Os managers recebem seus repositórios como dependências
+
+PRINCÍPIOS SOLID
+
+O código tenta seguir os princípios SOLID:
+
+Single Responsibility - Cada classe tem um trabalho específico
+Open/Closed - É fácil adicionar novas coisas sem quebrar o que já existe
+Liskov Substitution - As implementações respeitam os contratos das interfaces
+Interface Segregation - As interfaces são específicas e não forçam métodos desnecessários
+Dependency Inversion - As classes dependem de abstrações, não de implementações concretas
+
+ESTRUTURA DE PASTAS
+
+src/br/ufal/ic/myfood/
+  Facade.java (ponto de entrada)
+  Main.java (roda os testes)
+  models/ (as classes Manager e as entidades)
+  repositories/ (interfaces e implementações para acesso a dados)
+  persistence/ (gerenciam o XML)
+  validators/ (validam os dados)
+  exceptions/ (define as exceções customizadas)
+
+PERSISTENCIA
+
+A persistência usa XMLEncoder e XMLDecoder, que são classes padrão do Java.
+Quando a aplicação reinicia, ela carrega os dados do XML.
+
+Isso permite que os testes de persistência funcionem. Um teste cria dados e depois outro teste
+consegue carregar esses dados sem que eles tenham sido perdidos.
+
+CONCLUSAO
+
+É uma arquitetura bem estruturada que segue os padrões SOLID. O código fica organizado, legível
+e fácil de manter.
+

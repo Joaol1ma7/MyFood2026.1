@@ -79,11 +79,11 @@ public class EmpresaManager {
     }
 
     public String getAtributoEmpresa(int idEmpresa, String atributo) 
-            throws EmpresaNaoExisteException, AtributoInvalidoException {
+            throws EmpresaNaoCadastradaException, AtributoInvalidoException {
         
         Empresa empresa = empresaRepository.obterPorId(idEmpresa);
         if (empresa == null) {
-            throw new EmpresaNaoExisteException();
+            throw new EmpresaNaoCadastradaException();
         }
 
         empresaValidator.validarAtributo(atributo);

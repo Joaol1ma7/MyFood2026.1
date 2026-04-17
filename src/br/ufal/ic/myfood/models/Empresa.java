@@ -8,6 +8,9 @@ public class Empresa {
     private String idDono;
     private String nomeDono;
 
+    public Empresa() {
+    }
+
     public Empresa(int id, String nome, String endereco, String tipoCozinha, String idDono, String nomeDono) {
         this.id = id;
         this.nome = nome;

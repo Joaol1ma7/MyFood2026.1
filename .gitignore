@@ -4,6 +4,9 @@ br/
 !**/src/main/**/out/
 !**/src/test/**/out/
 
+### Data Persistence ###
+data
+
 ### Eclipse ###
 .apt_generated
 .classpath

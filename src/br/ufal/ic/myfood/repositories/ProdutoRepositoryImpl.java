@@ -1,23 +1,28 @@
 package br.ufal.ic.myfood.repositories;
 
 import br.ufal.ic.myfood.models.Produto;
+import br.ufal.ic.myfood.persistence.IdCounter;
+import br.ufal.ic.myfood.persistence.PersistenceManager;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProdutoRepositoryImpl implements ProdutoRepository {
+    private static final String ARQUIVO_PRODUTOS = "produtos";
+    private static final String ARQUIVO_ID = "produtos_id";
     private List<Produto> produtos;
-    private int proximoId;
+    private IdCounter idCounter;
 
     public ProdutoRepositoryImpl() {
-        this.produtos = new ArrayList<>();
-        this.proximoId = 1;
+        this.produtos = PersistenceManager.carregar(ARQUIVO_PRODUTOS);
+        List<IdCounter> idList = PersistenceManager.carregar(ARQUIVO_ID);
+        this.idCounter = idList.isEmpty() ? new IdCounter(1) : idList.get(0);
     }
 
     @Override
     public void adicionar(Produto produto) {
-        produto.setId(proximoId);
+        produto.setId(idCounter.obterEIncrementar());
         produtos.add(produto);
-        proximoId++;
+        salvar();
     }
 
     @Override
@@ -49,7 +54,8 @@ public class ProdutoRepositoryImpl implements ProdutoRepository {
     @Override
     public void limpar() {
         produtos.clear();
-        proximoId = 1;
+        idCounter = new IdCounter(1);
+        salvar();
     }
 
     @Override
@@ -57,9 +63,17 @@ public class ProdutoRepositoryImpl implements ProdutoRepository {
         for (int i = 0; i < produtos.size(); i++) {
             if (produtos.get(i).getId() == produto.getId()) {
                 produtos.set(i, produto);
+                salvar();
                 return;
             }
         }
+    }
+
+    private void salvar() {
+        PersistenceManager.salvar(produtos, ARQUIVO_PRODUTOS);
+        List<IdCounter> idList = new ArrayList<>();
+        idList.add(idCounter);
+        PersistenceManager.salvar(idList, ARQUIVO_ID);
     }
 }
 

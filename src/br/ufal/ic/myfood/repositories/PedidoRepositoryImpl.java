@@ -1,23 +1,28 @@
 package br.ufal.ic.myfood.repositories;
 
 import br.ufal.ic.myfood.models.Pedido;
+import br.ufal.ic.myfood.persistence.IdCounter;
+import br.ufal.ic.myfood.persistence.PersistenceManager;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PedidoRepositoryImpl implements PedidoRepository {
+    private static final String ARQUIVO_PEDIDOS = "pedidos";
+    private static final String ARQUIVO_ID = "pedidos_id";
     private List<Pedido> pedidos;
-    private int proximoNumero;
+    private IdCounter idCounter;
 
     public PedidoRepositoryImpl() {
-        this.pedidos = new ArrayList<>();
-        this.proximoNumero = 1;
+        this.pedidos = PersistenceManager.carregar(ARQUIVO_PEDIDOS);
+        List<IdCounter> idList = PersistenceManager.carregar(ARQUIVO_ID);
+        this.idCounter = idList.isEmpty() ? new IdCounter(1) : idList.get(0);
     }
 
     @Override
     public void adicionar(Pedido pedido) {
-        pedido.setNumero(proximoNumero);
+        pedido.setNumero(idCounter.obterEIncrementar());
         pedidos.add(pedido);
-        proximoNumero++;
+        salvar();
     }
 
     @Override
@@ -49,7 +54,8 @@ public class PedidoRepositoryImpl implements PedidoRepository {
     @Override
     public void limpar() {
         pedidos.clear();
-        proximoNumero = 1;
+        idCounter = new IdCounter(1);
+        salvar();
     }
 
     @Override
@@ -57,9 +63,17 @@ public class PedidoRepositoryImpl implements PedidoRepository {
         for (int i = 0; i < pedidos.size(); i++) {
             if (pedidos.get(i).getNumero() == pedido.getNumero()) {
                 pedidos.set(i, pedido);
+                salvar();
                 return;
             }
         }
+    }
+
+    private void salvar() {
+        PersistenceManager.salvar(pedidos, ARQUIVO_PEDIDOS);
+        List<IdCounter> idList = new ArrayList<>();
+        idList.add(idCounter);
+        PersistenceManager.salvar(idList, ARQUIVO_ID);
     }
 }
 
