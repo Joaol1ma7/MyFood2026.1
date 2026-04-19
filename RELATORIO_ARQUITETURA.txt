@@ -1,7 +1,7 @@
 RELATORIO SOBRE A ARQUITETURA DO PROJETO MYFOOD
 
 Este projeto utiliza uma arquitetura em camadas.
-Basicamente, o código está organizado em diferentes niveis de responsabilidade, onde cada camada
+O código está organizado em diferentes niveis de responsabilidade, onde cada camada
 faz sua parte e passa o resultado para a próxima.
 
 ESTRUTURA PRINCIPAL
@@ -61,7 +61,8 @@ ESTRUTURA DE PASTAS
 src/br/ufal/ic/myfood/
   Facade.java (ponto de entrada)
   Main.java (roda os testes)
-  models/ (as classes Manager e as entidades)
+  models/ (entidades)
+  service/ (classes manager)
   repositories/ (interfaces e implementações para acesso a dados)
   persistence/ (gerenciam o XML)
   validators/ (validam os dados)

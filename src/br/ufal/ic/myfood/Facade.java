@@ -4,14 +4,11 @@ import br.ufal.ic.myfood.exceptions.*;
 import br.ufal.ic.myfood.models.Usuario;
 import br.ufal.ic.myfood.models.Empresa;
 import br.ufal.ic.myfood.models.Produto;
-import br.ufal.ic.myfood.models.UsuarioManager;
-import br.ufal.ic.myfood.models.EmpresaManager;
-import br.ufal.ic.myfood.models.ProdutoManager;
-import br.ufal.ic.myfood.models.PedidoManager;
+import br.ufal.ic.myfood.service.UsuarioManager;
+import br.ufal.ic.myfood.service.EmpresaManager;
+import br.ufal.ic.myfood.service.ProdutoManager;
+import br.ufal.ic.myfood.service.PedidoManager;
 import br.ufal.ic.myfood.persistence.PersistenceManager;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Facade {
 

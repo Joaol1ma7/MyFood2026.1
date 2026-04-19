@@ -1,6 +1,6 @@
 ### IntelliJ IDEA ###
 out/
-br/
+bra/
 !**/src/main/**/out/
 !**/src/test/**/out/
 

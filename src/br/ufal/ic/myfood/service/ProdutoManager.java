@@ -1,6 +1,8 @@
-package br.ufal.ic.myfood.models;
+package br.ufal.ic.myfood.service;
 
 import br.ufal.ic.myfood.exceptions.*;
+import br.ufal.ic.myfood.models.Empresa;
+import br.ufal.ic.myfood.models.Produto;
 import br.ufal.ic.myfood.repositories.ProdutoRepository;
 import br.ufal.ic.myfood.repositories.ProdutoRepositoryImpl;
 import br.ufal.ic.myfood.validators.ProdutoValidator;
