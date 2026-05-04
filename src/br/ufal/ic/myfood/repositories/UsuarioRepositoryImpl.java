@@ -40,6 +40,17 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
     }
 
     @Override
+    public Usuario obterPorPlaca(String placa) {
+        if (placa == null) return null;
+        for (Usuario usuario : usuarioList) {
+            if (placa.equals(usuario.getPlaca())) {
+                return usuario;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public List<Usuario> obterTodos() {
         return new ArrayList<>(usuarioList);
     }

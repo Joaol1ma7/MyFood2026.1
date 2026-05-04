@@ -104,6 +104,11 @@ public class Facade {
         userManager.criarUsuario(nome, email, senha, endereco, cpf);
     }
 
+    public void criarUsuario(String nome, String email, String senha, String endereco, String veiculo, String placa)
+            throws UsuarioJaExisteException, DadosInvalidosException {
+        userManager.criarUsuario(nome, email, senha, endereco, veiculo, placa);
+    }
+
     public String login(String email, String senha) throws LoginInvalidoException {
         return userManager.login(email, senha);
     }
@@ -171,6 +176,69 @@ public class Facade {
     public int criarProduto(int empresa, String nome, float valor, String categoria)
             throws DadosInvalidosException, EmpresaNaoExisteException {
         return produtoManager.criarProduto(empresa, nome, valor, categoria);
+    }
+
+    public void cadastrarEntregador(int empresa, String entregador) throws DadosInvalidosException, EmpresaNaoExisteException, UsuarioNaoExisteException {
+        Empresa emp = empresaManager.getEmpresaById(empresa);
+        if (emp == null) {
+            throw new EmpresaNaoExisteException();
+        }
+
+        Usuario usuario = userManager.getUsuarioById(entregador);
+        if (usuario == null) {
+            throw new UsuarioNaoExisteException();
+        }
+
+        if (usuario.getPlaca() == null || usuario.getPlaca().isEmpty() || usuario.getVeiculo() == null || usuario.getVeiculo().isEmpty()) {
+            throw new UsuarioNaoEEntregadorException();
+        }
+
+        // add if not already
+        emp.adicionarEntregador(usuario.getId());
+        empresaManager.atualizarEmpresa(emp);
+    }
+
+    public String getEntregadores(int empresa) throws EmpresaNaoExisteException {
+        Empresa emp = empresaManager.getEmpresaById(empresa);
+        if (emp == null) {
+            throw new EmpresaNaoExisteException();
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("{[");
+        boolean first = true;
+        for (String uid : emp.getEntregadores()) {
+            Usuario u = userManager.getUsuarioById(uid);
+            String email = u == null ? "" : u.getEmail();
+            if (!first) sb.append(", ");
+            sb.append(email);
+            first = false;
+        }
+        sb.append("]}");
+        return sb.toString();
+    }
+
+    public String getEmpresas(String entregador) throws DadosInvalidosException, UsuarioNaoExisteException {
+        Usuario usuario = userManager.getUsuarioById(entregador);
+        if (usuario == null) {
+            throw new UsuarioNaoExisteException();
+        }
+
+        if (usuario.getPlaca() == null || usuario.getPlaca().isEmpty() || usuario.getVeiculo() == null || usuario.getVeiculo().isEmpty()) {
+            throw new UsuarioNaoEEntregadorException();
+        }
+
+        StringBuilder resultado = new StringBuilder();
+        resultado.append("{[");
+        boolean primeiro = true;
+        for (Empresa empresa : empresaManager.obterTodasEmpresas()) {
+            if (empresa.getEntregadores().contains(entregador)) {
+                if (!primeiro) resultado.append(", ");
+                resultado.append("[").append(empresa.getNome()).append(", ").append(empresa.getEndereco()).append("]");
+                primeiro = false;
+            }
+        }
+        resultado.append("]}");
+        return resultado.toString();
     }
 
     public void editarProduto(int produto, String nome, float valor, String categoria)

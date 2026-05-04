@@ -208,6 +208,14 @@ public class EmpresaManager {
         return empresaRepository.obterPorId(empresaId);
     }
 
+    public void atualizarEmpresa(Empresa empresa) {
+        empresaRepository.atualizar(empresa);
+    }
+
+    public java.util.List<Empresa> obterTodasEmpresas() {
+        return empresaRepository.obterTodas();
+    }
+
     public void alterarFuncionamento(int mercadoId, String abre, String fecha)
             throws NaoEhMercadoValidoException, DadosInvalidosException {
 

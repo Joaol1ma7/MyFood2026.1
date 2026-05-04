@@ -13,6 +13,7 @@ public class Empresa {
     private String tipo;
     private String idDono;
     private String nomeDono;
+    private java.util.List<String> entregadores;
 
     public Empresa() {
     }
@@ -37,6 +38,7 @@ public class Empresa {
         this.tipoMercado = tipoMercado;
         this.idDono = idDono;
         this.nomeDono = nomeDono;
+        this.entregadores = new java.util.ArrayList<>();
     }
 
     public Empresa(int id, String nome, String endereco, String tipo, Boolean aberto24Horas, int numeroFuncionarios, String idDono, String nomeDono) {
@@ -48,6 +50,7 @@ public class Empresa {
         this.numeroFuncionarios = numeroFuncionarios;
         this.idDono = idDono;
         this.nomeDono = nomeDono;
+        this.entregadores = new java.util.ArrayList<>();
     }
 
     public int getId() {
@@ -144,6 +147,18 @@ public class Empresa {
 
     public void setNumeroFuncionarios(int numeroFuncionarios) {
         this.numeroFuncionarios = numeroFuncionarios;
+    }
+
+    public java.util.List<String> getEntregadores() {
+        if (entregadores == null) entregadores = new java.util.ArrayList<>();
+        return entregadores;
+    }
+
+    public void adicionarEntregador(String usuarioId) {
+        if (entregadores == null) entregadores = new java.util.ArrayList<>();
+        if (!entregadores.contains(usuarioId)) {
+            entregadores.add(usuarioId);
+        }
     }
 }
 
