@@ -5,6 +5,10 @@ public class Empresa {
     private String nome;
     private String endereco;
     private String tipoCozinha;
+    private String tipoMercado;
+    private String abre;
+    private String fecha;
+    private String tipo;
     private String idDono;
     private String nomeDono;
 
@@ -16,6 +20,19 @@ public class Empresa {
         this.nome = nome;
         this.endereco = endereco;
         this.tipoCozinha = tipoCozinha;
+        this.tipo = "restaurante";
+        this.idDono = idDono;
+        this.nomeDono = nomeDono;
+    }
+
+    public Empresa(int id, String nome, String endereco, String tipo, String abre, String fecha, String tipoMercado, String idDono, String nomeDono) {
+        this.id = id;
+        this.nome = nome;
+        this.endereco = endereco;
+        this.tipo = tipo;
+        this.abre = abre;
+        this.fecha = fecha;
+        this.tipoMercado = tipoMercado;
         this.idDono = idDono;
         this.nomeDono = nomeDono;
     }
@@ -66,6 +83,38 @@ public class Empresa {
 
     public void setNomeDono(String nomeDono) {
         this.nomeDono = nomeDono;
+    }
+
+    public String getTipoMercado() {
+        return tipoMercado;
+    }
+
+    public void setTipoMercado(String tipoMercado) {
+        this.tipoMercado = tipoMercado;
+    }
+
+    public String getAbre() {
+        return abre;
+    }
+
+    public void setAbre(String abre) {
+        this.abre = abre;
+    }
+
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 }
 

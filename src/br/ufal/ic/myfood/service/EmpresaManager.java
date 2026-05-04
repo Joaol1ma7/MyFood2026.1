@@ -35,7 +35,9 @@ public class EmpresaManager {
     public int criarEmpresa(String tipoEmpresa, String idDono, String nome, String endereco, String tipoCozinha, String nomeDono)
             throws EmpresaJaExisteException, EmpresaDuplicadaException, DadosInvalidosException {
 
+        empresaValidator.validarTipoEmpresa(tipoEmpresa);
         empresaValidator.validarNome(nome);
+        empresaValidator.validarEndereco(endereco);
 
         for (Empresa empresa : empresaRepository.obterTodas()) {
             if (empresa.getNome().equals(nome) && !empresa.getIdDono().equals(idDono)) {
@@ -47,6 +49,31 @@ public class EmpresaManager {
         }
 
         Empresa empresa = new Empresa(0, nome, endereco, tipoCozinha, idDono, nomeDono);
+        empresa.setTipo("restaurante");
+        empresaRepository.adicionar(empresa);
+
+        return empresa.getId();
+    }
+
+    public int criarMercado(String tipoEmpresa, String idDono, String nome, String endereco, String abre, String fecha, String tipoMercado, String nomeDono)
+            throws EmpresaJaExisteException, EmpresaDuplicadaException, DadosInvalidosException {
+
+        empresaValidator.validarTipoEmpresa(tipoEmpresa);
+        empresaValidator.validarNome(nome);
+        empresaValidator.validarEndereco(endereco);
+        empresaValidator.validarHorarioParaCriar(abre, fecha);
+        empresaValidator.validarTipoMercado(tipoMercado);
+
+        for (Empresa empresa : empresaRepository.obterTodas()) {
+            if (empresa.getNome().equals(nome) && !empresa.getIdDono().equals(idDono)) {
+                throw new EmpresaJaExisteException();
+            }
+            if (empresa.getNome().equals(nome) && empresa.getEndereco().equals(endereco) && empresa.getIdDono().equals(idDono)) {
+                throw new EmpresaDuplicadaException();
+            }
+        }
+
+        Empresa empresa = new Empresa(0, nome, endereco, "mercado", abre, fecha, tipoMercado, idDono, nomeDono);
         empresaRepository.adicionar(empresa);
 
         return empresa.getId();
@@ -99,6 +126,12 @@ public class EmpresaManager {
                 return empresa.getTipoCozinha();
             case "dono":
                 return empresa.getNomeDono();
+            case "tipomercado":
+                return empresa.getTipoMercado();
+            case "abre":
+                return empresa.getAbre();
+            case "fecha":
+                return empresa.getFecha();
             default:
                 throw new AtributoInvalidoException();
         }
@@ -145,5 +178,20 @@ public class EmpresaManager {
 
     public Empresa getEmpresaById(int empresaId) {
         return empresaRepository.obterPorId(empresaId);
+    }
+
+    public void alterarFuncionamento(int mercadoId, String abre, String fecha)
+            throws NaoEhMercadoValidoException, DadosInvalidosException {
+
+        Empresa mercado = empresaRepository.obterPorId(mercadoId);
+
+        if (mercado == null || !mercado.getTipo().equals("mercado")) {
+            throw new NaoEhMercadoValidoException();
+        }
+
+        empresaValidator.validarHorario(abre, fecha);
+
+        mercado.setAbre(abre);
+        mercado.setFecha(fecha);
     }
 }
