@@ -138,6 +138,21 @@ public class Facade {
         return empresaManager.criarMercado(tipoEmpresa, idDono, nome, endereco, abre, fecha, tipoMercado, dono.getNome());
     }
 
+    public int criarEmpresa(String tipoEmpresa, String idDono, String nome, String endereco, boolean aberto24Horas, int numeroFuncionarios)
+            throws EmpresaJaExisteException, EmpresaDuplicadaException, UsuarioNaoPodeCriarEmpresaException, DadosInvalidosException, UsuarioNaoExisteException {
+
+        Usuario dono = userManager.getUsuarioById(idDono);
+        if (dono == null) {
+            throw new UsuarioNaoExisteException();
+        }
+
+        if (dono.getCpf() == null) {
+            throw new UsuarioNaoPodeCriarEmpresaException();
+        }
+
+        return empresaManager.criarFarmacia(tipoEmpresa, idDono, nome, endereco, aberto24Horas, numeroFuncionarios, dono.getNome());
+    }
+
     public String getEmpresasDoUsuario(String idDono)
             throws UsuarioNaoPodeCriarEmpresaException {
         return empresaManager.getEmpresasDoUsuario(idDono, userManager.getUsuarios());

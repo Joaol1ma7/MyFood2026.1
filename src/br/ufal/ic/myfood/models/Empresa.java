@@ -8,6 +8,8 @@ public class Empresa {
     private String tipoMercado;
     private String abre;
     private String fecha;
+    private Boolean aberto24Horas;
+    private int numeroFuncionarios;
     private String tipo;
     private String idDono;
     private String nomeDono;
@@ -33,6 +35,17 @@ public class Empresa {
         this.abre = abre;
         this.fecha = fecha;
         this.tipoMercado = tipoMercado;
+        this.idDono = idDono;
+        this.nomeDono = nomeDono;
+    }
+
+    public Empresa(int id, String nome, String endereco, String tipo, Boolean aberto24Horas, int numeroFuncionarios, String idDono, String nomeDono) {
+        this.id = id;
+        this.nome = nome;
+        this.endereco = endereco;
+        this.tipo = tipo;
+        this.aberto24Horas = aberto24Horas;
+        this.numeroFuncionarios = numeroFuncionarios;
         this.idDono = idDono;
         this.nomeDono = nomeDono;
     }
@@ -115,6 +128,22 @@ public class Empresa {
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
+    }
+
+    public Boolean getAberto24Horas() {
+        return aberto24Horas;
+    }
+
+    public void setAberto24Horas(Boolean aberto24Horas) {
+        this.aberto24Horas = aberto24Horas;
+    }
+
+    public int getNumeroFuncionarios() {
+        return numeroFuncionarios;
+    }
+
+    public void setNumeroFuncionarios(int numeroFuncionarios) {
+        this.numeroFuncionarios = numeroFuncionarios;
     }
 }
 

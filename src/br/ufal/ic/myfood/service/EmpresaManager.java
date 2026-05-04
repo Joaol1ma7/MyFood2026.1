@@ -132,9 +132,37 @@ public class EmpresaManager {
                 return empresa.getAbre();
             case "fecha":
                 return empresa.getFecha();
+            case "aberto24horas":
+                Boolean aberto = empresa.getAberto24Horas();
+                return aberto == null ? "false" : (aberto ? "true" : "false");
+            case "numerofuncionarios":
+                return String.valueOf(empresa.getNumeroFuncionarios());
             default:
                 throw new AtributoInvalidoException();
         }
+    }
+
+    public int criarFarmacia(String tipoEmpresa, String idDono, String nome, String endereco, Boolean aberto24Horas, int numeroFuncionarios, String nomeDono)
+            throws EmpresaJaExisteException, EmpresaDuplicadaException, DadosInvalidosException {
+
+        empresaValidator.validarTipoEmpresa(tipoEmpresa);
+        empresaValidator.validarNome(nome);
+        empresaValidator.validarEndereco(endereco);
+        empresaValidator.validarNumeroFuncionarios(numeroFuncionarios);
+
+        for (Empresa empresa : empresaRepository.obterTodas()) {
+            if (empresa.getNome().equals(nome) && !empresa.getIdDono().equals(idDono)) {
+                throw new EmpresaJaExisteException();
+            }
+            if (empresa.getNome().equals(nome) && empresa.getEndereco().equals(endereco) && empresa.getIdDono().equals(idDono)) {
+                throw new EmpresaDuplicadaException();
+            }
+        }
+
+        Empresa empresa = new Empresa(0, nome, endereco, "farmacia", aberto24Horas, numeroFuncionarios, idDono, nomeDono);
+        empresaRepository.adicionar(empresa);
+
+        return empresa.getId();
     }
 
     public int getIdEmpresa(String idDono, String nome, int indice)

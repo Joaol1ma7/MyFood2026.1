@@ -45,6 +45,12 @@ public class EmpresaValidator {
         }
     }
 
+    public void validarNumeroFuncionarios(int numero) throws ValorInvalidoException {
+        if (numero < 0) {
+            throw new ValorInvalidoException();
+        }
+    }
+
     public void validarHorario(String abre, String fecha) throws FormatoHoraInvalidoException, HorarioInvalidoException {
         boolean abreVazio = abre == null || abre.isEmpty();
         boolean fechaVazio = fecha == null || fecha.isEmpty();
