@@ -67,7 +67,6 @@ public class EmpresaRepositoryImpl implements EmpresaRepository {
                 return;
             }
         }
-        // if not found, add
         adicionar(empresa);
     }
 

@@ -4,6 +4,7 @@ import br.ufal.ic.myfood.exceptions.*;
 import br.ufal.ic.myfood.models.Usuario;
 import br.ufal.ic.myfood.models.Empresa;
 import br.ufal.ic.myfood.models.Produto;
+import br.ufal.ic.myfood.models.Pedido;
 import br.ufal.ic.myfood.service.UsuarioManager;
 import br.ufal.ic.myfood.service.EmpresaManager;
 import br.ufal.ic.myfood.service.ProdutoManager;
@@ -17,6 +18,7 @@ public class Facade {
     private static EmpresaManager empresaManager;
     private static ProdutoManager produtoManager;
     private static PedidoManager pedidoManager;
+    private static br.ufal.ic.myfood.service.EntregaManager entregaManager;
 
     public Facade() {
         if (userManager == null) {
@@ -31,6 +33,9 @@ public class Facade {
         if (pedidoManager == null) {
             pedidoManager = new PedidoManager();
             setupPedidoManagerDependencies();
+        }
+        if (entregaManager == null) {
+            entregaManager = new br.ufal.ic.myfood.service.EntregaManager(pedidoManager, userManager, empresaManager);
         }
     }
 
@@ -82,7 +87,81 @@ public class Facade {
         userManager.zerarDados();
         empresaManager.zerarDados();
         pedidoManager.zerarDados();
+        entregaManager.zerarDados();
         PersistenceManager.limparTodosDados();
+    }
+
+    public void liberarPedido(int numero) throws DadosInvalidosException {
+        pedidoManager.liberarPedido(numero);
+    }
+
+    public int obterPedido(String entregador) throws DadosInvalidosException, UsuarioNaoExisteException {
+        Usuario usuario = userManager.getUsuarioById(entregador);
+        if (usuario == null) throw new UsuarioNaoExisteException();
+
+        if (usuario.getPlaca() == null || usuario.getPlaca().isEmpty() || usuario.getVeiculo() == null || usuario.getVeiculo().isEmpty()) {
+            throw new UsuarioNaoEEntregadorException();
+        }
+
+        java.util.List<Integer> empresasQueTrabalha = new java.util.ArrayList<>();
+        for (Empresa emp : empresaManager.obterTodasEmpresas()) {
+            if (emp.getEntregadores().contains(entregador)) {
+                empresasQueTrabalha.add(emp.getId());
+            }
+        }
+
+        if (empresasQueTrabalha.isEmpty()) {
+            throw new br.ufal.ic.myfood.exceptions.EntregadorSemEmpresaException();
+        }
+
+        java.util.List<Pedido> pedidosProntos = new java.util.ArrayList<>();
+        for (Pedido p : pedidoManager.obterTodosPedidos()) {
+            if ("pronto".equals(p.getEstado())) {
+                int empId = Integer.parseInt(p.getEmpresa());
+                if (empresasQueTrabalha.contains(empId)) {
+                    pedidosProntos.add(p);
+                }
+            }
+        }
+
+        if (pedidosProntos.isEmpty()) {
+            throw new br.ufal.ic.myfood.exceptions.NaoExistePedidoParaEntregaException();
+        }
+
+        Pedido escolhido = null;
+        for (Pedido p : pedidosProntos) {
+            Empresa emp = empresaManager.getEmpresaById(Integer.parseInt(p.getEmpresa()));
+            if (emp != null && "farmacia".equals(emp.getTipo())) {
+                if (escolhido == null || p.getNumero() < escolhido.getNumero()) escolhido = p;
+            }
+        }
+        if (escolhido == null) {
+            for (Pedido p : pedidosProntos) {
+                if (escolhido == null || p.getNumero() < escolhido.getNumero()) escolhido = p;
+            }
+        }
+
+        if (escolhido == null) {
+            throw new br.ufal.ic.myfood.exceptions.NaoExistePedidoParaEntregaException();
+        }
+
+        return escolhido.getNumero();
+    }
+
+    public int criarEntrega(int pedido, String entregador, String destino) throws DadosInvalidosException {
+        return entregaManager.criarEntrega(pedido, entregador, destino);
+    }
+
+    public String getEntrega(int id, String atributo) throws DadosInvalidosException {
+        return entregaManager.getEntrega(id, atributo);
+    }
+
+    public int getIdEntrega(int pedido) throws DadosInvalidosException {
+        return entregaManager.getIdEntregaByPedido(pedido);
+    }
+
+    public void entregar(int entrega) throws DadosInvalidosException {
+        entregaManager.entregar(entrega);
     }
 
     public String getAtributoUsuario(String id, String atributo) throws UsuarioNaoExisteException {
@@ -193,7 +272,7 @@ public class Facade {
             throw new UsuarioNaoEEntregadorException();
         }
 
-        // add if not already
+
         emp.adicionarEntregador(usuario.getId());
         empresaManager.atualizarEmpresa(emp);
     }

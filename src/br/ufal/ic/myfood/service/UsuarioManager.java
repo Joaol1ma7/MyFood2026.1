@@ -50,7 +50,7 @@ public class UsuarioManager {
         usuarioValidator.validarVeiculo(veiculo);
         usuarioValidator.validarPlaca(placa);
 
-        // check plate uniqueness before email uniqueness to match test expectations
+
         if (usuarioRepository.obterPorPlaca(placa) != null) {
             throw new PlacaInvalidoException();
         }
