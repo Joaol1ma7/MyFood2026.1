@@ -5,10 +5,7 @@ import br.ufal.ic.myfood.models.Usuario;
 import br.ufal.ic.myfood.models.Empresa;
 import br.ufal.ic.myfood.models.Produto;
 import br.ufal.ic.myfood.models.Pedido;
-import br.ufal.ic.myfood.service.UsuarioManager;
-import br.ufal.ic.myfood.service.EmpresaManager;
-import br.ufal.ic.myfood.service.ProdutoManager;
-import br.ufal.ic.myfood.service.PedidoManager;
+import br.ufal.ic.myfood.service.*;
 import br.ufal.ic.myfood.persistence.PersistenceManager;
 
 public class Facade {
@@ -35,7 +32,7 @@ public class Facade {
             setupPedidoManagerDependencies();
         }
         if (entregaManager == null) {
-            entregaManager = new br.ufal.ic.myfood.service.EntregaManager(pedidoManager, userManager, empresaManager);
+            entregaManager = new EntregaManager(pedidoManager, userManager, empresaManager);
         }
     }
 
@@ -111,7 +108,7 @@ public class Facade {
         }
 
         if (empresasQueTrabalha.isEmpty()) {
-            throw new br.ufal.ic.myfood.exceptions.EntregadorSemEmpresaException();
+            throw new EntregadorSemEmpresaException();
         }
 
         java.util.List<Pedido> pedidosProntos = new java.util.ArrayList<>();
@@ -125,7 +122,7 @@ public class Facade {
         }
 
         if (pedidosProntos.isEmpty()) {
-            throw new br.ufal.ic.myfood.exceptions.NaoExistePedidoParaEntregaException();
+            throw new NaoExistePedidoParaEntregaException();
         }
 
         Pedido escolhido = null;
@@ -142,7 +139,7 @@ public class Facade {
         }
 
         if (escolhido == null) {
-            throw new br.ufal.ic.myfood.exceptions.NaoExistePedidoParaEntregaException();
+            throw new NaoExistePedidoParaEntregaException();
         }
 
         return escolhido.getNumero();

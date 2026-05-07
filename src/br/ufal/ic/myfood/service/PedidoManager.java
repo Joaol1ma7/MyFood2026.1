@@ -201,11 +201,11 @@ public class PedidoManager {
         }
 
         if ("pronto".equals(pedido.getEstado())) {
-            throw new br.ufal.ic.myfood.exceptions.PedidoJaLiberadoException();
+            throw new PedidoJaLiberadoException();
         }
 
         if (!"preparando".equals(pedido.getEstado())) {
-            throw new br.ufal.ic.myfood.exceptions.NaoEPosivelLiberarPedidoException();
+            throw new NaoEPosivelLiberarPedidoException();
         }
 
         pedido.setEstado("pronto");
