@@ -9,6 +9,8 @@ public class Usuario {
     private String senha;
     private String endereco;
     private String cpf;
+    private String veiculo;
+    private String placa;
 
     public Usuario() {
         this.id = UUID.randomUUID().toString();
@@ -25,6 +27,12 @@ public class Usuario {
         this.endereco = endereco;
         this.cpf = cpf;
         this.id = UUID.randomUUID().toString();
+    }
+
+    public Usuario(String nome, String email, String senha, String endereco, String cpf, String veiculo, String placa) {
+        this(nome, email, senha, endereco, cpf);
+        this.veiculo = veiculo;
+        this.placa = placa;
     }
 
     public String getNome() {
@@ -65,6 +73,22 @@ public class Usuario {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
+    }
+
+    public String getVeiculo() {
+        return veiculo;
+    }
+
+    public void setVeiculo(String veiculo) {
+        this.veiculo = veiculo;
+    }
+
+    public String getPlaca() {
+        return placa;
+    }
+
+    public void setPlaca(String placa) {
+        this.placa = placa;
     }
 
     public String getId() {

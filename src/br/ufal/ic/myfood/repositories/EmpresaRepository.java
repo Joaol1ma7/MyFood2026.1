@@ -8,6 +8,7 @@ public interface EmpresaRepository {
     Empresa obterPorId(int id);
     List<Empresa> obterPorDono(String idDono);
     List<Empresa> obterTodas();
+    void atualizar(Empresa empresa);
     void limpar();
 }
 

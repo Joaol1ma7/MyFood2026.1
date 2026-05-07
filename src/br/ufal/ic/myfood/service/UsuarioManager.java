@@ -36,6 +36,37 @@ public class UsuarioManager {
         usuarioRepository.adicionar(new Usuario(nome, email, senha, endereco, cpf));
     }
 
+    public void criarUsuario(String nome, String email, String senha, String endereco, String cpf, String veiculo, String placa)
+            throws UsuarioJaExisteException, DadosInvalidosException {
+        usuarioValidator.validarNome(nome);
+        usuarioValidator.validarEmail(email);
+        usuarioValidator.validarSenha(senha);
+        usuarioValidator.validarEndereco(endereco);
+
+        if (cpf != null) {
+            usuarioValidator.validarCPF(cpf);
+        }
+
+        usuarioValidator.validarVeiculo(veiculo);
+        usuarioValidator.validarPlaca(placa);
+
+
+        if (usuarioRepository.obterPorPlaca(placa) != null) {
+            throw new PlacaInvalidoException();
+        }
+
+        if (usuarioRepository.obterPorEmail(email) != null) {
+            throw new UsuarioJaExisteException();
+        }
+
+        usuarioRepository.adicionar(new Usuario(nome, email, senha, endereco, cpf, veiculo, placa));
+    }
+
+    public void criarUsuario(String nome, String email, String senha, String endereco, String veiculo, String placa)
+            throws UsuarioJaExisteException, DadosInvalidosException {
+        criarUsuario(nome, email, senha, endereco, null, veiculo, placa);
+    }
+
     public String getAtributoUsuario(String id, String atributo) throws UsuarioNaoExisteException {
         Usuario usuario = usuarioRepository.obterPorId(id);
         if (usuario == null) {
@@ -53,6 +84,10 @@ public class UsuarioManager {
                 return usuario.getEndereco();
             case "cpf":
                 return usuario.getCpf();
+            case "veiculo":
+                return usuario.getVeiculo();
+            case "placa":
+                return usuario.getPlaca();
             case "id":
                 return usuario.getId();
             default:

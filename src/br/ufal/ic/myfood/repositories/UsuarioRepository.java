@@ -7,6 +7,7 @@ public interface UsuarioRepository {
     void adicionar(Usuario usuario);
     Usuario obterPorId(String id);
     Usuario obterPorEmail(String email);
+    Usuario obterPorPlaca(String placa);
     List<Usuario> obterTodos();
     void limpar();
 }

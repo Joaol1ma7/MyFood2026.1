@@ -194,6 +194,24 @@ public class PedidoManager {
         pedidoRepository.atualizar(pedido);
     }
 
+    public void liberarPedido(int numeroPedido) throws DadosInvalidosException {
+        Pedido pedido = pedidoRepository.obterPorNumero(numeroPedido);
+        if (pedido == null) {
+            throw new PedidoNaoEncontradoException();
+        }
+
+        if ("pronto".equals(pedido.getEstado())) {
+            throw new PedidoJaLiberadoException();
+        }
+
+        if (!"preparando".equals(pedido.getEstado())) {
+            throw new NaoEPosivelLiberarPedidoException();
+        }
+
+        pedido.setEstado("pronto");
+        pedidoRepository.atualizar(pedido);
+    }
+
     public void removerProduto(int numeroPedido, String nomeProduto)
             throws DadosInvalidosException {
 
@@ -241,6 +259,43 @@ public class PedidoManager {
 
     public void zerarDados() {
         pedidoRepository.limpar();
+    }
+
+    public java.util.List<Pedido> obterTodosPedidos() {
+        return pedidoRepository.obterTodos();
+    }
+
+    public java.util.List<String> obterNomesProdutosPedido(int numeroPedido) throws DadosInvalidosException {
+        Pedido pedido = pedidoRepository.obterPorNumero(numeroPedido);
+        if (pedido == null) {
+            throw new PedidoNaoEncontradoException();
+        }
+        java.util.List<String> nomes = new java.util.ArrayList<>();
+        for (int pid : pedido.getProdutosIds()) {
+            if (produtoRepository != null) {
+                Produto p = produtoRepository.obterPorId(pid);
+                if (p != null) nomes.add(p.getNome());
+            }
+        }
+        return nomes;
+    }
+
+    public void marcarPedidoComoEntregando(int numeroPedido) throws DadosInvalidosException {
+        Pedido pedido = pedidoRepository.obterPorNumero(numeroPedido);
+        if (pedido == null) {
+            throw new PedidoNaoEncontradoException();
+        }
+        pedido.setEstado("entregando");
+        pedidoRepository.atualizar(pedido);
+    }
+
+    public void marcarPedidoEntregue(int numeroPedido) throws DadosInvalidosException {
+        Pedido pedido = pedidoRepository.obterPorNumero(numeroPedido);
+        if (pedido == null) {
+            throw new PedidoNaoEncontradoException();
+        }
+        pedido.setEstado("entregue");
+        pedidoRepository.atualizar(pedido);
     }
 }
 

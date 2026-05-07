@@ -58,6 +58,18 @@ public class EmpresaRepositoryImpl implements EmpresaRepository {
         salvar();
     }
 
+    @Override
+    public void atualizar(Empresa empresa) {
+        for (int i = 0; i < empresaList.size(); i++) {
+            if (empresaList.get(i).getId() == empresa.getId()) {
+                empresaList.set(i, empresa);
+                salvar();
+                return;
+            }
+        }
+        adicionar(empresa);
+    }
+
     private void salvar() {
         PersistenceManager.salvar(empresaList, ARQUIVO_EMPRESAS);
         List<IdCounter> idList = new ArrayList<>();

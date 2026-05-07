@@ -39,5 +39,17 @@ public class UsuarioValidator {
             throw new CpfInvalidoException();
         }
     }
+
+    public void validarVeiculo(String veiculo) throws VeiculoInvalidoException {
+        if (veiculo == null || veiculo.isEmpty()) {
+            throw new VeiculoInvalidoException();
+        }
+    }
+
+    public void validarPlaca(String placa) throws PlacaInvalidoException {
+        if (placa == null || placa.isEmpty()) {
+            throw new PlacaInvalidoException();
+        }
+    }
 }
 
